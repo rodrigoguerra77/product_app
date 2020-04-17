@@ -63,14 +63,7 @@ Vue.component('product', {
                     :class="{ disabledButton: !inStock}"
                     >Add to Cart</button>
             
-            <button v-on:click="removeToCart"
-                    :disabled="cart == 0"
-                    :class="{ disabledButton: cart == 0}"
-                    >Remove to Cart</button>
-
-            <div class="cart">
-                <p>Cart({{ cart }})</p>
-            </div>
+            <button @click="removeFromCart">Remove from Cart</button>
 
         </div>
 
@@ -99,21 +92,19 @@ Vue.component('product', {
                     variantQuantity: 0
                 }
             ],
-            sizes: ['small', 'medium', 'large', 'extra large'],
-            cart: 0
+            sizes: ['small', 'medium', 'large', 'extra large']
+            
         }
     },
     methods: {
         addToCart() {
-            this.cart += 1
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
         },
         updateProduct(index) {
             this.selectedVariant = index
         },
-        removeToCart() {
-            if(this.cart > 0){
-                this.cart -= 1
-            }
+        removeFromCart: function() {
+            this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId)
         }
     },
     computed: {
@@ -145,6 +136,19 @@ Vue.component('product', {
 var app = new Vue({
     el: '#app',
     data: {
-        premium: true
+        premium: true,
+        cart: []
+    },
+    methods: {
+        updateCart(id) {
+            this.cart.push(id)
+        },
+        removeItem(id) {
+          for(var i = this.cart.length - 1; i >= 0; i--) {
+            if (this.cart[i] === id) {
+               this.cart.splice(i, 1);
+            }
+          }
+        }
     }
 })
