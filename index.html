@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product App</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body>
+
+    <div class="nav-bar"></div>
+
+    <div id="app">
+        <div class="product">
+
+            <div class="product-image">
+                <a v-bind:href="url">
+                    <img v-bind:src="image" v-bind:alt="altText">
+                </a>
+            </div>
+    
+            <div class="product-info">
+                <h1>{{ title }}</h1>
+
+                <p>The best {{ product }} in the world!</p>
+
+                <p v-if="inStock > 10">In Stock</p>
+                <p v-else-if="inStock <= 10 && inStock > 0">Almost sold out!</p>
+                <p v-else
+                    :class="{ lineThrough: !inStock}"
+                    >Out of stock</p>
+
+                <span>{{ sale }}</span>
+
+                <ul>
+                    <li v-for="detail in details">{{ detail }}</li>
+                </ul>
+
+                <div v-for="(variant, index) in variants" 
+                    :key="variant.variantId"
+                    class="color-box"
+                    :style="{backgroundColor: variant.variantColor}"
+                    @mouseover="updateProduct(index)">
+                    
+                </div>
+
+                <div>
+                    <p>Sizes:</p>
+                    <ul>
+                        <li v-for="size in sizes">{{ size }}</li>
+                    </ul>
+                </div>
+
+                <button v-on:click="addToCart" 
+                        :disabled="!inStock"
+                        :class="{ disabledButton: !inStock}"
+                        >Add to Cart</button>
+                
+                <button v-on:click="removeToCart"
+                        :disabled="cart == 0"
+                        :class="{ disabledButton: cart == 0}"
+                        >Remove to Cart</button>
+
+                <div class="cart">
+                    <p>Cart({{ cart }})</p>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="main.js"></script>
+</body>
+</html>
